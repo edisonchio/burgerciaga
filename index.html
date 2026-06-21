@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BURGERCIAGA — 澳門和牛漢堡世家</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: #1A1A1A;
+  color: #fff;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; width: 100%; }
+
+/* ===== NAV ===== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: #888888;
+  border-bottom: 1px solid #999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  height: 64px;
+}
+.nav-logo {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #000;
+}
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #444;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: #000; }
+.nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+.nav-hamburger span { display: block; width: 24px; height: 1px; background: #000; }
+
+/* ===== HERO BANNER ===== */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 80px 80px;
+}
+.hero-slide.active { opacity: 1; }
+
+/* gradient overlay */
+.hero-slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.2) 100%);
+  z-index: 1;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.04);
+  transition: transform 8s ease;
+}
+.hero-slide.active .hero-bg { transform: scale(1); }
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+}
+.hero-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 18px;
+}
+.hero-title {
+  font-size: clamp(36px, 6vw, 80px);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: #fff;
+  margin-bottom: 20px;
+}
+.hero-sub {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: #bbb;
+  margin-bottom: 36px;
+}
+.hero-btn {
+  display: inline-block;
+  padding: 14px 40px;
+  border: 1px solid #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+.hero-btn:hover { background: #fff; color: #000; }
+
+/* slide indicators */
+.hero-dots {
+  position: absolute;
+  bottom: 36px;
+  right: 80px;
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+}
+.hero-dot {
+  width: 28px; height: 1px;
+  background: #444;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.hero-dot.active { background: #fff; }
+
+/* ===== SECTION DIVIDER ===== */
+.section { padding: 120px 80px; }
+.section-dark { background: #000; }
+.section-grey { background: #0d0d0d; }
+.section-charcoal { background: #111; }
+
+/* ===== TWO COLUMN ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.col-block {
+  position: relative;
+  overflow: hidden;
+  height: 520px;
+  cursor: pointer;
+}
+.col-block .col-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.8s ease;
+}
+.col-block:hover .col-bg { transform: scale(1.04); }
+.col-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 1;
+  transition: background 0.4s;
+}
+.col-block:hover::before { background: rgba(0,0,0,0.42); }
+.col-content {
+  position: absolute;
+  bottom: 52px;
+  left: 52px;
+  z-index: 2;
+}
+.col-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #777;
+  margin-bottom: 14px;
+}
+.col-title {
+  font-size: clamp(24px, 3vw, 40px);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.col-sub {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: #999;
+}
+
+/* ===== BESTSELLERS ===== */
+.section-header {
+  text-align: center;
+  margin-bottom: 72px;
+}
+.section-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 18px;
+}
+.section-title {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.section-title-cn {
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  color: #666;
+  margin-top: 10px;
+  font-weight: 400;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+.product-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0d0d0d;
+}
+.product-img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  background-color: #111;
+  transition: transform 0.7s ease;
+}
+.product-card:hover .product-img { transform: scale(1.04); }
+.product-info {
+  padding: 24px 24px 28px;
+}
+.product-name {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.product-name-cn {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #666;
+  margin-bottom: 12px;
+}
+.product-price {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: #888;
+}
+.product-hover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.product-card:hover .product-hover { opacity: 1; }
+.product-hover span {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 10px 26px;
+}
+
+/* ===== STORE INFO ===== */
+.store-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  min-height: 560px;
+}
+.store-map {
+  background: #0d0d0d;
+  position: relative;
+  overflow: hidden;
+}
+.store-map-inner {
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+}
+.store-map-inner svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+}
+.store-text {
+  background: #0a0a0a;
+  padding: 80px 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.store-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 28px;
+}
+.store-title {
+  font-size: clamp(24px, 3.5vw, 46px);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.store-title-cn {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: #555;
+  margin-bottom: 48px;
+}
+.store-detail {
+  margin-bottom: 20px;
+}
+.store-detail-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 8px;
+}
+.store-detail-text {
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: #ccc;
+  line-height: 1.7;
+}
+.store-btn {
+  display: inline-block;
+  margin-top: 48px;
+  padding: 14px 40px;
+  border: 1px solid #333;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.store-btn:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
+
+/* ===== SOCIAL ===== */
+.social-section {
+  text-align: center;
+  padding: 100px 80px;
+  background: #000;
+}
+.social-title {
+  font-size: clamp(22px, 3vw, 40px);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.social-title-cn {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  color: #555;
+  margin-bottom: 44px;
+}
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+}
+.social-link {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #666;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.social-link:hover { color: #fff; }
+.social-link::before {
+  content: '';
+  display: inline-block;
+  width: 18px; height: 1px;
+  background: currentColor;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: #888888;
+  border-top: 1px solid #999;
+  padding: 72px 80px 40px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 64px;
+}
+.footer-brand {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 24px;
+}
+.footer-addr {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: #222;
+  line-height: 2;
+}
+.footer-col-title {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: #333;
+  margin-bottom: 24px;
+}
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.footer-links a {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #333;
+  transition: color 0.3s;
+}
+.footer-links a:hover { color: #000; }
+.footer-social {
+  border-top: 1px solid #999;
+  padding: 28px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+.footer-social-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #444;
+}
+.footer-social-link {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #444;
+  transition: color 0.3s;
+}
+.footer-social-link:hover { color: #000; }
+.footer-bottom {
+  border-top: 1px solid #999;
+  padding-top: 28px;
+  text-align: center;
+}
+.footer-copy {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #444;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .section { padding: 80px 24px; }
+  .hero-slide { padding: 48px 24px; }
+  .hero-dots { right: 24px; }
+  .two-col { grid-template-columns: 1fr; }
+  .col-block { height: 360px; }
+  .products-grid { grid-template-columns: 1fr 1fr; }
+  .store-section { grid-template-columns: 1fr; }
+  .store-text { padding: 48px 24px; }
+  .social-links { flex-direction: column; align-items: center; gap: 24px; }
+  footer { padding: 48px 24px 28px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+}
+@media (max-width: 600px) {
+  .products-grid { grid-template-columns: 1fr; }
+  .hero-title { font-size: 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav>
+  <div class="nav-logo">BURGERCIAGA</div>
+  <ul class="nav-links">
+    <li><a href="#home">HOME <span style="color:#777;font-weight:400;letter-spacing:0.1em;font-size:10px;margin-left:4px;">首頁</span></a></li>
+    <li><a href="#menu">MENU <span style="color:#777;font-weight:400;letter-spacing:0.1em;font-size:10px;margin-left:4px;">菜單</span></a></li>
+    <li><a href="#offers">OFFERS &amp; SETS <span style="color:#777;font-weight:400;letter-spacing:0.1em;font-size:10px;margin-left:4px;">優惠套餐</span></a></li>
+    <li><a href="#store">STORE INFO <span style="color:#777;font-weight:400;letter-spacing:0.1em;font-size:10px;margin-left:4px;">門店資訊</span></a></li>
+    <li><a href="#story">OUR STORY <span style="color:#777;font-weight:400;letter-spacing:0.1em;font-size:10px;margin-left:4px;">品牌故事</span></a></li>
+    <li><a href="#careers">CAREERS &amp; CONTACT <span style="color:#777;font-weight:400;letter-spacing:0.1em;font-size:10px;margin-left:4px;">招聘與聯絡</span></a></li>
+  </ul>
+  <div class="nav-hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile nav -->
+<div id="mobile-nav" style="display:none;position:fixed;top:64px;left:0;right:0;background:#888888;border-bottom:1px solid #999;z-index:99;padding:32px 24px 40px;">
+  <ul style="list-style:none;display:flex;flex-direction:column;gap:24px;">
+    <li><a href="#home" style="font-size:13px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#222;" onclick="toggleMenu()">HOME 首頁</a></li>
+    <li><a href="#menu" style="font-size:13px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#222;" onclick="toggleMenu()">MENU 菜單</a></li>
+    <li><a href="#offers" style="font-size:13px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#222;" onclick="toggleMenu()">OFFERS &amp; SETS 優惠套餐</a></li>
+    <li><a href="#store" style="font-size:13px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#222;" onclick="toggleMenu()">STORE INFO 門店資訊</a></li>
+    <li><a href="#story" style="font-size:13px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#222;" onclick="toggleMenu()">OUR STORY 品牌故事</a></li>
+    <li><a href="#careers" style="font-size:13px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#222;" onclick="toggleMenu()">CAREERS &amp; CONTACT 招聘與聯絡</a></li>
+  </ul>
+</div>
+
+<!-- ===== HERO BANNER ===== -->
+<section class="hero" id="home">
+
+  <!-- Slide 1: Limited Sets -->
+  <div class="hero-slide active" id="slide-0">
+    <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1600&q=80&auto=format&fit=crop&sat=-40&bri=-10');filter:saturate(0.4) brightness(0.7);"></div>
+    <div class="hero-content">
+      <div class="hero-label">01 — SEASONAL</div>
+      <h1 class="hero-title">LIMITED<br>SEASONAL SETS</h1>
+      <p class="hero-sub">期間限定優惠套餐</p>
+      <a href="#offers" class="hero-btn">VIEW OFFERS &nbsp; 查看優惠</a>
+    </div>
+  </div>
+
+  <!-- Slide 2: Saga Wagyu -->
+  <div class="hero-slide" id="slide-1">
+    <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1550547660-d9450f859349?w=1600&q=80&auto=format&fit=crop&sat=-40&bri=-10');filter:saturate(0.35) brightness(0.65);"></div>
+    <div class="hero-content">
+      <div class="hero-label">02 — SIGNATURE</div>
+      <h1 class="hero-title">SAGA WAGYU<br>BURGER</h1>
+      <p class="hero-sub">澳門獨家和牛漢堡世家</p>
+      <a href="#menu" class="hero-btn">BROWSE MENU &nbsp; 瀏覽菜單</a>
+    </div>
+  </div>
+
+  <!-- Slide 3: Careers -->
+  <div class="hero-slide" id="slide-2">
+    <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1529543544282-ea669407fca3?w=1600&q=80&auto=format&fit=crop&sat=-40&bri=-10');filter:saturate(0.3) brightness(0.6);"></div>
+    <div class="hero-content">
+      <div class="hero-label">03 — CAREERS</div>
+      <h1 class="hero-title">JOIN OUR<br>TEAM</h1>
+      <p class="hero-sub">誠邀熱愛餐飲的你加入</p>
+      <a href="#careers" class="hero-btn">VIEW CAREERS &nbsp; 職缺資訊</a>
+    </div>
+  </div>
+
+  <!-- Slide Dots -->
+  <div class="hero-dots">
+    <div class="hero-dot active" onclick="goSlide(0)"></div>
+    <div class="hero-dot" onclick="goSlide(1)"></div>
+    <div class="hero-dot" onclick="goSlide(2)"></div>
+  </div>
+</section>
+
+<!-- ===== TWO COLUMN: OFFERS + STORY ===== -->
+<section id="offers" style="padding:2px 0;background:#000;">
+  <div class="two-col">
+    <!-- Left: Offers -->
+    <div class="col-block">
+      <div class="col-bg" style="background-image:url('https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=1200&q=80&auto=format&fit=crop&sat=-50&bri=-10');filter:saturate(0.3) brightness(0.6);"></div>
+      <div class="col-content">
+        <div class="col-tag">PROMOTIONS</div>
+        <div class="col-title">OFFERS &amp;<br>SET MEALS</div>
+        <div class="col-sub">LIMITED TIME DISCOUNT &nbsp; 限時折扣</div>
+      </div>
+    </div>
+    <!-- Right: Story -->
+    <div class="col-block" id="story">
+      <div class="col-bg" style="background-image:url('https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=1200&q=80&auto=format&fit=crop&sat=-50&bri=-10');filter:saturate(0.25) brightness(0.55);"></div>
+      <div class="col-content">
+        <div class="col-tag">ABOUT US</div>
+        <div class="col-title">OUR<br>STORY</div>
+        <div class="col-sub">MACAU WAGYU BURGER HERITAGE &nbsp; 澳門和牛漢堡傳承</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BESTSELLERS ===== -->
+<section class="section section-charcoal" id="menu">
+  <div class="section-header">
+    <div class="section-eyebrow">SIGNATURE ITEMS</div>
+    <h2 class="section-title">BEST SELLERS</h2>
+    <div class="section-title-cn">人氣招牌</div>
+  </div>
+  <div class="products-grid">
+
+    <!-- Product 1 -->
+    <div class="product-card">
+      <div class="product-img" style="background-image:url('https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&q=80&auto=format&fit=crop&sat=-50&bri=-5');"></div>
+      <div class="product-hover"><span>VIEW DETAIL 查看詳情</span></div>
+      <div class="product-info">
+        <div class="product-name">SAGA WAGYU SINGLE</div>
+        <div class="product-name-cn">佐賀和牛漢堡 單層</div>
+        <div class="product-price">MOP 128</div>
+      </div>
+    </div>
+
+    <!-- Product 2 -->
+    <div class="product-card">
+      <div class="product-img" style="background-image:url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80&auto=format&fit=crop&sat=-50&bri=-5');"></div>
+      <div class="product-hover"><span>VIEW DETAIL 查看詳情</span></div>
+      <div class="product-info">
+        <div class="product-name">SAGA WAGYU DOUBLE</div>
+        <div class="product-name-cn">佐賀和牛漢堡 雙層</div>
+        <div class="product-price">MOP 168</div>
+      </div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="product-card">
+      <div class="product-img" style="background-image:url('https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&q=80&auto=format&fit=crop&sat=-50&bri=-5');"></div>
+      <div class="product-hover"><span>VIEW DETAIL 查看詳情</span></div>
+      <div class="product-info">
+        <div class="product-name">SEASONAL SET A</div>
+        <div class="product-name-cn">期間限定套餐 A</div>
+        <div class="product-price">MOP 198</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== STORE INFO ===== -->
+<section id="store" style="background:#000;">
+  <div class="store-section">
+
+    <!-- Map placeholder (abstract SVG grid) -->
+    <div class="store-map">
+      <div class="store-map-inner">
+        <svg viewBox="0 0 600 560" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="600" height="560" fill="#080808"/>
+          <!-- Grid lines -->
+          <g stroke="#1e1e1e" stroke-width="1">
+            <line x1="0" y1="100" x2="600" y2="100"/>
+            <line x1="0" y1="200" x2="600" y2="200"/>
+            <line x1="0" y1="300" x2="600" y2="300"/>
+            <line x1="0" y1="400" x2="600" y2="400"/>
+            <line x1="0" y1="500" x2="600" y2="500"/>
+            <line x1="100" y1="0" x2="100" y2="560"/>
+            <line x1="200" y1="0" x2="200" y2="560"/>
+            <line x1="300" y1="0" x2="300" y2="560"/>
+            <line x1="400" y1="0" x2="400" y2="560"/>
+            <line x1="500" y1="0" x2="500" y2="560"/>
+          </g>
+          <!-- Road blocks -->
+          <rect x="80" y="140" width="180" height="32" fill="#141414" rx="0"/>
+          <rect x="80" y="230" width="280" height="32" fill="#141414" rx="0"/>
+          <rect x="200" y="140" width="32" height="130" fill="#141414" rx="0"/>
+          <rect x="340" y="140" width="32" height="220" fill="#141414" rx="0"/>
+          <rect x="380" y="300" width="160" height="32" fill="#141414" rx="0"/>
+          <!-- Location pin -->
+          <circle cx="260" cy="290" r="14" fill="none" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="260" cy="290" r="4" fill="#fff"/>
+          <line x1="260" y1="304" x2="260" y2="328" stroke="#fff" stroke-width="1.5"/>
+          <!-- Label -->
+          <text x="282" y="292" font-family="Helvetica Neue, sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="#666" text-transform="uppercase">BURGERCIAGA</text>
+          <text x="282" y="308" font-family="Helvetica Neue, sans-serif" font-size="9" letter-spacing="1" fill="#444">十月初五街 109號</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="store-text">
+      <div class="store-eyebrow">LOCATION</div>
+      <div class="store-title">OUR STORE</div>
+      <div class="store-title-cn">門店資訊</div>
+
+      <div class="store-detail">
+        <div class="store-detail-label">ADDRESS 地址</div>
+        <div class="store-detail-text">澳門十月初五街109號<br>東龍大廈地下A<br><span style="color:#444;font-size:11px;letter-spacing:0.1em;">澳門漢堡世家旗艦店</span></div>
+      </div>
+
+      <div class="store-detail">
+        <div class="store-detail-label">HOURS 營業時間</div>
+        <div class="store-detail-text">每日 11:00 — 19:00<br><span style="color:#444;font-size:11px;letter-spacing:0.1em;">Monday — Sunday</span></div>
+      </div>
+
+      <div class="store-detail">
+        <div class="store-detail-label">CONTACT 聯絡</div>
+        <div class="store-detail-text"><a href="mailto:jobs@burgerciaga.com" style="color:#888;letter-spacing:0.1em;">jobs@burgerciaga.com</a></div>
+      </div>
+
+      <a href="#" class="store-btn">LOCATION DETAILS &nbsp; 詳細位置</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer id="careers">
+  <div class="footer-grid">
+
+    <!-- Col 1: Brand Info -->
+    <div>
+      <div class="footer-brand">BURGERCIAGA</div>
+      <div class="footer-addr">
+        澳門漢堡世家<br><br>
+        地址<br>
+        澳門十月初五街109號<br>
+        東龍大廈地下A<br><br>
+        營業時間<br>
+        11:00 — 19:00<br><br>
+        <a href="mailto:jobs@burgerciaga.com" style="color:#333;letter-spacing:0.1em;font-size:11px;">jobs@burgerciaga.com</a>
+      </div>
+    </div>
+
+    <!-- Col 2: Nav -->
+    <div>
+      <div class="footer-col-title">NAVIGATION</div>
+      <ul class="footer-links">
+        <li><a href="#menu">MENU &nbsp;<span style="color:#666;font-weight:400;font-size:10px;">菜單</span></a></li>
+        <li><a href="#offers">OFFERS &nbsp;<span style="color:#666;font-weight:400;font-size:10px;">優惠套餐</span></a></li>
+        <li><a href="#careers">CAREERS &nbsp;<span style="color:#666;font-weight:400;font-size:10px;">招聘</span></a></li>
+        <li><a href="#">FAQ &nbsp;<span style="color:#666;font-weight:400;font-size:10px;">常見問題</span></a></li>
+      </ul>
+    </div>
+
+    <!-- Col 3: Legal -->
+    <div>
+      <div class="footer-col-title">LEGAL</div>
+      <ul class="footer-links">
+        <li><a href="#">PRIVACY POLICY &nbsp;<span style="color:#666;font-weight:400;font-size:10px;">私隱政策</span></a></li>
+        <li><a href="#">TERMS OF USE &nbsp;<span style="color:#666;font-weight:400;font-size:10px;">網站使用條款</span></a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-social">
+    <span class="footer-social-label">FOLLOW US &nbsp;·&nbsp; 追蹤我們</span>
+    <a href="#" class="footer-social-link">INSTAGRAM</a>
+    <a href="#" class="footer-social-link">XIAOHONGSHU <span style="color:#666;font-weight:400;font-size:10px;margin-left:4px;">小紅書</span></a>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-copy">COPYRIGHT &copy; FACEX MACAU LTD. ALL RIGHTS RESERVED.</div>
+  </div>
+</footer>
+
+<!-- ===== JS ===== -->
+<script>
+// Mobile nav toggle
+function toggleMenu() {
+  var m = document.getElementById('mobile-nav');
+  m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'block' : 'none';
+}
+
+// Hero slideshow
+var current = 0;
+var slides = document.querySelectorAll('.hero-slide');
+var dots = document.querySelectorAll('.hero-dot');
+var timer;
+
+function goSlide(n) {
+  slides[current].classList.remove('active');
+  dots[current].classList.remove('active');
+  current = (n + slides.length) % slides.length;
+  slides[current].classList.add('active');
+  dots[current].classList.add('active');
+  clearInterval(timer);
+  timer = setInterval(function(){ goSlide(current + 1); }, 6000);
+}
+
+timer = setInterval(function(){ goSlide(current + 1); }, 6000);
+
+// Fade-in on scroll
+var io = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.product-card, .store-text, .social-section, .col-block').forEach(function(el) {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(28px)';
+  el.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
+  io.observe(el);
+});
+</script>
+
+</body>
+</html>
+
+
+
+

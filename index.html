@@ -256,19 +256,15 @@ nav {
   overflow: hidden;
   cursor: pointer;
   background: #0d0d0d;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.product-img {
-  width: 100%;
-  aspect-ratio: 3/4;
-  object-fit: cover;
-  background-size: cover;
-  background-position: center;
-  background-color: #111;
-  transition: transform 0.7s ease;
-}
-.product-card:hover .product-img { transform: scale(1.04); }
 .product-info {
-  padding: 24px 24px 28px;
+  padding: 48px 32px;
+  text-align: center;
+  width: 100%;
 }
 .product-name {
   font-size: 13px;
@@ -288,26 +284,6 @@ nav {
   font-size: 12px;
   letter-spacing: 0.15em;
   color: #888;
-}
-.product-hover {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.35);
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-.product-card:hover .product-hover { opacity: 1; }
-.product-hover span {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: #fff;
-  border: 1px solid #fff;
-  padding: 10px 26px;
 }
 
 /* ===== STORE INFO ===== */
@@ -656,34 +632,28 @@ footer {
 
     <!-- Product 1 -->
     <div class="product-card">
-      <div class="product-img" style="background-image:url('https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&q=80&auto=format&fit=crop&sat=-50&bri=-5');"></div>
-      <div class="product-hover"><span>VIEW DETAIL 查看詳情</span></div>
-      <div class="product-info">
-        <div class="product-name">SAGA WAGYU SINGLE</div>
-        <div class="product-name-cn">佐賀和牛漢堡 單層</div>
-        <div class="product-price">MOP 128</div>
+      <div class="product-info" style="padding:48px 32px;text-align:center;">
+        <div class="product-name">CLASSIC WAGYU BURGER</div>
+        <div class="product-name-cn" style="margin-top:14px;">經典和牛漢堡</div>
+        <div class="product-price" style="margin-top:28px;font-size:18px;letter-spacing:0.15em;">MOP 76</div>
       </div>
     </div>
 
     <!-- Product 2 -->
     <div class="product-card">
-      <div class="product-img" style="background-image:url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80&auto=format&fit=crop&sat=-50&bri=-5');"></div>
-      <div class="product-hover"><span>VIEW DETAIL 查看詳情</span></div>
-      <div class="product-info">
-        <div class="product-name">SAGA WAGYU DOUBLE</div>
-        <div class="product-name-cn">佐賀和牛漢堡 雙層</div>
-        <div class="product-price">MOP 168</div>
+      <div class="product-info" style="padding:48px 32px;text-align:center;">
+        <div class="product-name">SMOKY SAUCE WAGYU BURGER</div>
+        <div class="product-name-cn" style="margin-top:14px;">煙燻肉醬和牛漢堡</div>
+        <div class="product-price" style="margin-top:28px;font-size:18px;letter-spacing:0.15em;">MOP 86</div>
       </div>
     </div>
 
     <!-- Product 3 -->
     <div class="product-card">
-      <div class="product-img" style="background-image:url('https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&q=80&auto=format&fit=crop&sat=-50&bri=-5');"></div>
-      <div class="product-hover"><span>VIEW DETAIL 查看詳情</span></div>
-      <div class="product-info">
-        <div class="product-name">SEASONAL SET A</div>
-        <div class="product-name-cn">期間限定套餐 A</div>
-        <div class="product-price">MOP 198</div>
+      <div class="product-info" style="padding:48px 32px;text-align:center;">
+        <div class="product-name">BLACK TRUFFLE WAGYU BURGER</div>
+        <div class="product-name-cn" style="margin-top:14px;">黑松露和牛漢堡</div>
+        <div class="product-price" style="margin-top:28px;font-size:18px;letter-spacing:0.15em;">MOP 98</div>
       </div>
     </div>
 
